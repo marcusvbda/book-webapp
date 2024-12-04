@@ -1,0 +1,62 @@
+services:
+    app:
+        container_name: book_app
+        restart: unless-stopped
+        tty: true
+        build:
+            context: ./config
+            dockerfile: ./_docker/Dockerfile
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+            - ./storage/logs/laravel:/var/log/laravel
+        depends_on:
+            - database
+        networks:
+            - app-network
+
+    webserver:
+        image: nginx:alpine
+        container_name: book_webserver
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www/html
+            - ./config/_docker/nginx/conf.d:/etc/nginx/conf.d
+        depends_on:
+            - app
+        networks:
+            - app-network
+
+    database:
+        image: mysql:8
+        container_name: book_dbserver
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: books
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./config/_docker/dbdata:/var/lib/mysql
+        networks:
+            - app-network
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: book_phpmyadmin
+        restart: unless-stopped
+        environment:
+            PMA_HOST: database
+            PMA_USER: user
+            PMA_PASSWORD: password
+        ports:
+            - "8080:80"
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
