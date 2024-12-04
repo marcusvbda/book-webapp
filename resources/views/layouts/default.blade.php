@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ config('app.logo') }}" type="image/x-icon">
-    <title>{{ config('app.name') }} | @yield('title')</title>
+    <link rel="shortcut icon" href="{{ asset('images/logo.svg') }}" type="image/x-icon">
+    <title>{{ config('app.name') }} @yield('title')</title>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @livewireStyles
 </head>

@@ -2,7 +2,6 @@
 
 return [
     'name' => env('APP_NAME', 'Laravel'),
-    'logo' => env('APP_LOGO', 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg'),
     'default_theme' => env('DEFAULT_APP_THEME', 'dark'),
     'env' => env('APP_ENV', 'production'),
     'debug' => (bool) env('APP_DEBUG', false),
