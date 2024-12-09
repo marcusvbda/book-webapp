@@ -1,7 +1,8 @@
 @php
-    $currentLocale = App::getLocale();
-    $usUrl = \App\Helper::addQueryParams(request()->fullUrl(), ['lang' => 'en']);
-    $ptbrUrl = \App\Helper::addQueryParams(request()->fullUrl(), ['lang' => 'pt_BR']);
+    $currentLocale = request()->lang;
+    $route = request()->route();
+    $usUrl = route($route->getName(), array_merge($route->parameters(), ['lang' => 'en']));
+    $ptbrUrl = route($route->getName(), array_merge($route->parameters(), ['lang' => 'pt_BR']));
 @endphp
 <select x-data x-on:change="window.location.href = $event.target.value" class="border-none pr-4">
     <option value="{{ $usUrl }}" @if ($currentLocale === 'en') selected @endif>

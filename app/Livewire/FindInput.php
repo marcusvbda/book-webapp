@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Enums\ServiceType;
+use App\Enums\ServiceTypeEnum;
+use App\Helper;
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App;
 
 class FindInput extends Component
 {
@@ -19,7 +19,7 @@ class FindInput extends Component
 
     public function makePopularServiceList(): array
     {
-        $services = ServiceType::cases();
+        $services = ServiceTypeEnum::cases();
         return array_slice($services, 0, 3);
     }
 
@@ -31,13 +31,13 @@ class FindInput extends Component
     #[On('on-selected-service')]
     public function selectService(string $serviceName): void
     {
-        $this->redirect(route('search', ["filter" => $serviceName]));
+        $this->redirect(Helper::routeLocaled('search', ["filter" => $serviceName]));
     }
 
     public function filterResults($filter)
     {
         $results = [];
-        $services = array_filter(ServiceType::cases(), function ($service) use ($filter) {
+        $services = array_filter(ServiceTypeEnum::cases(), function ($service) use ($filter) {
             return str_contains(strtolower(__($service->value)), strtolower($filter)) !== false;
         });
 
