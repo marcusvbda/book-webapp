@@ -26,6 +26,7 @@ class SetLocaleConfig
         }
 
         app()->setLocale($locale);
+        $route->forgetParameter('lang');
         return $next($request);
     }
 }

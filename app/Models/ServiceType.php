@@ -10,7 +10,7 @@ class ServiceType extends Model
 {
     use HasCode;
 
-    protected $timestamp = false;
+    public $timestamps = false;
     protected $table = 'company_service_types';
     protected $fillable = [
         'company_id',

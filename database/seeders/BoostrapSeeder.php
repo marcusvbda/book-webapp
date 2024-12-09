@@ -32,6 +32,8 @@ class BoostrapSeeder extends Seeder
             'country' => 'BR',
             'zipcode' => '06763060',
             'city' => 'Taboão da serra',
+            'state' => 'SP',
+            'street' => 'Francisco andugar espinosa',
             'neighborhood' => 'Chácara agrindus',
             'number' => '18',
             'complement' => 'apt 27a'
@@ -42,7 +44,9 @@ class BoostrapSeeder extends Seeder
             'default' => false,
             'country' => 'BR',
             'zipcode' => '17506030',
+            'street' => '24 de dezembro',
             'city' => 'Marilia',
+            'state' => 'SP',
             'neighborhood' => 'Somenzari',
             'number' => '1916'
         ]);

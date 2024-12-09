@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Enums\ServiceTypeEnum;
 use App\Helper;
+use App\Http\Controllers\ServicesController;
+use Illuminate\Support\Facades\App;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -23,11 +25,6 @@ class FindInput extends Component
         return array_slice($services, 0, 3);
     }
 
-    public function updatedFilter(): void
-    {
-        // dd($this->filter);
-    }
-
     #[On('on-selected-service')]
     public function selectService(string $serviceName): void
     {
@@ -36,16 +33,27 @@ class FindInput extends Component
 
     public function filterResults($filter)
     {
-        $results = [];
-        $services = array_filter(ServiceTypeEnum::cases(), function ($service) use ($filter) {
-            return str_contains(strtolower(__($service->value)), strtolower($filter)) !== false;
-        });
+        $controller = App::make(ServicesController::class);
+        $result = $controller->getFilterServices($filter);
+        $query = $result['query'];
 
-        if (count($services)) {
-            $results[__('Services')] = array_map(fn($service) => __($service->value), $services);
+        $response = [];
+
+        if ($query) {
+            $paginated = $query->paginate(10);
+            if ($paginated->total() > 0) {
+                $paginated->getCollection()->each(fn($row) => $row->append(['logo', 'inlineAddress', 'pageUrl']));
+                $response[__('Companies or Service Providers')] = $paginated;
+            }
         }
 
-        return $results;
+        $services = $result['services'];
+        if (count($services)) {
+            $response[__('Services')] = array_map(fn($service) => __($service->value), $services);
+        }
+
+
+        return $response;
     }
 
     public function render()

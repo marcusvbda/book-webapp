@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('zipcode');
             $table->string('city');
+            $table->string('state');
+            $table->string('street');
             $table->string('neighborhood');
             $table->string('number');
             $table->text('complement')->nullable();

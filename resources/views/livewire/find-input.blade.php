@@ -15,12 +15,10 @@
                 </div>
             </template>
             <template x-if="!loading && !Object.keys(result).length">
-                <div class="w-full">
-                    <div class="w-full flex items-start">
-                        <strong class="text-sm font-semibold text-gray-500">
-                            {{ __('Popular services') }}
-                        </strong>
-                    </div>
+                <div class="w-full flex items-start flex-col">
+                    <strong class="text-sm font-semibold text-gray-500">
+                        {{ __('Popular services') }}
+                    </strong>
                     <div class="flex flex-wrap gap-2 mt-2">
                         @foreach ($popularServiceList as $service)
                             <a href="#"
@@ -34,18 +32,33 @@
             </template>
             <template x-if="!loading && Object.keys(result)">
                 <template x-for="(resultKey, key) in Object.keys(result)" :key="key">
-                    <div class="w-full">
-                        <div class="w-full flex items-start">
-                            <strong class="text-sm font-semibold text-gray-500">
-                                <span x-text="resultKey"></span>
-                            </strong>
-                        </div>
+                    <div class="w-full flex flex-col items-start mb-6 last:mb-0">
+                        <strong class="text-sm font-semibold text-gray-500">
+                            <span x-text="resultKey"></span>
+                        </strong>
                         <div class="flex flex-wrap gap-2 mt-2">
                             <template x-for="service in result[resultKey]">
-                                <a href="#" x-on:click.prevent ="onSelectedService(service)"
-                                    class="text-sm font-semibold text-gray-600 bg-gray-200 rounded-md px-4 py-1"
-                                    x-text="service">
-                                </a>
+                                <div :key="index">
+                                    <template x-if="typeof service === 'string'">
+                                        <a href="#" x-on:click.prevent ="onSelectedService(service)"
+                                            class="text-sm font-semibold text-gray-600 bg-gray-200 rounded-md px-4 py-1"
+                                            x-text="service">
+                                        </a>
+                                    </template>
+                                    <template x-if="typeof service === 'object'">
+                                        <a x-bind:href="service.pageUrl"
+                                            class="w-full flex flex-row gap-4 items-center cursor-pointer">
+                                            <img x-bind:src="service.logo" alt=""
+                                                class="size-14 rounded-md border border-gray-100" />
+                                            <div class="flex flex-col items-start">
+                                                <strong x-text="service.name"
+                                                    class="font-semibold text-gray-700"></strong>
+                                                <span class="text-xs text-gray-500"
+                                                    x-text="service.inlineAddress"></span>
+                                            </div>
+                                        </a>
+                                    </template>
+                                </div>
                             </template>
                         </div>
                     </div>
@@ -67,7 +80,16 @@
                         if (this.filter == '') return this.result = {};
                         this.loading = true;
                         this.$wire.filterResults(this.filter).then((res) => {
-                            this.result = res;
+                            let newResult = {}
+                            Object.keys(res).forEach(key => {
+                                const row = res[key];
+                                if (row?.current_page) {
+                                    newResult[key] = row?.data || []
+                                } else {
+                                    newResult[key] = row
+                                }
+                            });
+                            this.result = newResult;
                             this.loading = false;
                         })
                     });
