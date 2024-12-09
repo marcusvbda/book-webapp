@@ -69,7 +69,7 @@
                         {{ __('Discover and book service with the best companies and service providers near you') }}
                     </p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <x-find-input />
+                        <livewire:find-input lazy />
                     </div>
                 </div>
             </div>
