@@ -1,11 +1,16 @@
 <div class="w-full relative" x-data="filterInputData" x-on:click.outside="open = false">
     <div class="relative w-full border overflow-hidden rounded-md border-gray-200" wire:ignore>
-        <input type="text" placeholder="{{ __('Find companies or services') }}" x-on:focus="open = true"
-            x-on:input.debounce.500ms="filter = $event.target.value"
-            class="block w-full border-none py-3 pl-12 pr-4 text-gray-500 placeholder:text-gray-300 focus:ring-0 rounded-md">
         <div class="pointer-events-none absolute inset-0 left-3 flex items-center">
             <x-icons.search class="size-6 text-gray-500" />
         </div>
+        <input type="text" placeholder="{{ __('Find companies or services') }}" x-on:focus="open = true"
+            x-on:input.debounce.500ms="filter = $event.target.value" x-bind:value="filter"
+            class="block w-full border-none py-3 pl-12 pr-12 text-gray-500 placeholder:text-gray-300 focus:ring-0 rounded-md">
+        <template x-if="filter">
+            <div class="pointer-events-auto absolute inset-y-0 right-3 flex items-center" x-on:click="filter = ''">
+                <x-icons.close class="size-6 text-gray-500 cursor-pointer" />
+            </div>
+        </template>
     </div>
     <template x-if="open">
         <x-talk-balloon>
@@ -36,8 +41,7 @@
                             <strong class="text-sm font-semibold text-gray-500">
                                 <span x-text="resultKey"></span>
                             </strong>
-                            <div class="flex flex-wrap gap-2 mt-2"
-                                x-bind:class="{ 'max-h-72 overflow-y-auto': resultKey !== '{{ __('Services') }}' }">
+                            <div class="flex flex-wrap gap-2 mt-2">
                                 <template x-for="service in result[resultKey].data">
                                     <div :key="index">
                                         <template x-if="typeof service === 'string'">
